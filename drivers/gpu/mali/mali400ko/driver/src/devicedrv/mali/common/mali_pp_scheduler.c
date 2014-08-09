@@ -242,13 +242,13 @@ static void mali_pp_scheduler_schedule(void)
 			}
 		}
 
-		if (mali_pp_scheduler_balance_jobs) {
-			if ( (0==job->sub_jobs_started) && (num_slots_idle < num_slots) && (job->sub_job_count > num_slots_idle))
-			{
-				MALI_DEBUG_PRINT(4, ("Mali PP scheduler: Job with %d subjobs not started, since only %d/%d cores are available\n", job->sub_job_count, num_slots_idle,num_slots));
-				return;
-			}
+		#if MALI_PP_SCHEDULER_KEEP_SUB_JOB_STARTS_ALIGNED
+		if ( (0==job->sub_jobs_started) && (num_slots_idle < num_slots) && (job->sub_job_count > num_slots_idle))
+		{
+			MALI_DEBUG_PRINT(4, ("Mali PP scheduler: Job with %d subjobs not started, since only %d/%d cores are available\n", job->sub_job_count, num_slots_idle,num_slots));
+			return;
 		}
+		#endif
 
 		#if MALI_PP_SCHEDULER_FORCE_NO_JOB_OVERLAP_BETWEEN_APPS
 		if ( job->session != session )
