@@ -2146,11 +2146,12 @@ static ssize_t abb_regu_votg_store(struct kobject *kobj, struct kobj_attribute *
 {
 	int ret;
 	unsigned int val;
+	unsigned char c;
 
 	ret = sscanf(buf, "%d", &val);
 
-	if (ret < 0 || val < 0 || val > 1) {
-		pr_info("[ABB-Regu] invalid inputs \n");
+	if (ret < 0 || (val != 0 && val != 1 && val != 8 && val != 9)) {
+		pr_info("[ABB-Regu] invalid inputs - only 0,1,8 and 9 are valid\n");
 		return -EINVAL;
 	}
 
@@ -2167,12 +2168,13 @@ static ssize_t abb_regu_votg_store(struct kobject *kobj, struct kobj_attribute *
 			return 0;
 		}
 
-	} else if (val) {
+	} else {
+		c = (unsigned char) val;
 		ret = abx500_set_register_interruptible(
 				 &pdev->dev,
 				 AB8500_REGU_CTRL1,
 				 0x81,
-				 0x09);
+				 c);
 		if (ret < 0) {
 			pr_err("[ABB-Regu] failed to set VOTG or no changed\n");
 			return 0;
