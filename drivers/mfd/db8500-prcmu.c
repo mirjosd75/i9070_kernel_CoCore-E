@@ -4102,6 +4102,7 @@ static int __init late(void)
 	#ifdef CONFIG_DB8500_LIVEOPP
 	int ret;
 	#endif /* CONFIG_DB8500_LIVEOPP */
+#ifdef CONFIG_TRACING
 	extern int tracing_update_buffers(void);
 #ifdef ENABLE_FTRACE_BY_DEFAULT
 	extern int tracing_set_tracer(const char *buf);
@@ -4119,7 +4120,7 @@ static int __init late(void)
 	trace_set_clr_event("workqueue", "workqueue_execute_end", 1);
 	trace_set_clr_event("power", "cpu_frequency", 1);
 	trace_set_clr_event("prcmu", NULL, 1);
-
+#endif //CONFIG_TRACING
 	#ifdef CONFIG_DB8500_LIVEOPP
 	liveopp_kobject = kobject_create_and_add("liveopp", kernel_kobj);
 	if (!liveopp_kobject) {
@@ -4132,7 +4133,7 @@ static int __init late(void)
 	pr_info("[LiveOPP] Initialized: v%s\n", LiveOPP_VER);
 	#endif /* CONFIG_DB8500_LIVEOPP */
 
-#ifdef ENABLE_FTRACE_BY_DEFAULT
+#ifdef ENABLE_FTRACE_BY_DEFAULT && CONFIG_FTRACE
 	err = tracing_set_tracer("function");
 	if (err)
 		pr_info("prcmu : unable to enable function trace\n");
