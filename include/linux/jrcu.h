@@ -77,4 +77,8 @@ extern void rcu_note_might_resched(void);
 extern void rcu_scheduler_starting(void);
 extern int rcu_scheduler_active __read_mostly;
 
+static inline void rcu_cpu_stall_reset(void)
+{
+}
+
 #endif /* __LINUX_JRCU_H */
